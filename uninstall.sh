@@ -12,7 +12,7 @@ clear
 
 #Banner
 echo "======================================================"
-echo "+              Install update script                 +"
+echo "+             uninstall update script                +"
 echo "======================================================"                                                  
 echo "    [0;1;34;94m▄▄▄▄[0m   [0;34m▄▄▄▄▄▄[0m               [0;37m▄▄▄▄▄[0m   [0;1;30;90m▄▄▄[0m    [0;1;30;90m▄▄▄[0m"
 echo "  [0;34m██▀▀▀▀█[0m  [0;34m██▀▀▀[0;37m▀██[0m   [0;37m▄████▄[0m   [0;37m█[0;1;30;90m▀▀▀▀██▄[0m  [0;1;30;90m██▄[0m  [0;1;30;90m▄█[0;1;34;94m█[0m" 
@@ -37,7 +37,7 @@ seconds${NC} to abort the process."
 echo "======================================================"
 sleep 15
 
-#Begin installation
+#Begin uninstallation
 
 #Check if user is root
 if [ `id -u` != 0 ] ; then
@@ -45,27 +45,21 @@ if [ `id -u` != 0 ] ; then
 	exit 1
 fi
 
-#Check for dependencies
-echo "${CYAN}Checking for dependencies ... ${NC}"
+#Remove binary file
+echo -n "[*] Removing binary file ... "
+rm /bin/update >> /dev/null
 
-#Check for gcc
-echo -n "[*] Checking for gcc ... "
-which gcc >> /dev/null
 if [ $? -eq 0 ]; then
-	echo "${GREEN}[Present]${NC}"
+	echo "${GREEN}[Done]${NC}"
 else
-	echo "${RED}[Absent]${NC}"
-	echo "${CYAN}Please install it to proceed${NC}"
+	echo "${RED}[Failed]${NC}"
 	echo "${CYAN}ABORT${NC}"
 	exit
 fi
 
-#Begin installation
-echo "${CYAN}Installing ... ${NC}"
-
-#Compile source file
-echo -n "[*] Compiling source ... "
-cc src/update.c -o src/update
+#remove updateScript directory
+echo -n "[*] Removing updateScript directory ... "
+rm -r ~/.crazyScripts/updateScript >> /dev/null
 if [ $? -eq 0 ]; then
 	echo "${GREEN}[Done]${NC}"
 else
@@ -74,66 +68,4 @@ else
 	exit
 fi
 
-#Create directory
-echo -n "[*] Creating file structure ... "
-mkdir -p ~/.crazyScripts/updateScript >> /dev/null
-if [ $? -eq 0 ]; then
-	echo "${GREEN}[Done]${NC}"
-else
-	echo "${RED}[Failed]${NC}"
-	echo "${RED}ABORT${NC}"
-	exit
-fi
-
-#Copy compiled file
-echo -n "[*] Moving binary file ... "
-mv src/update ~/.crazyScripts/updateScript >> /dev/null
-if [ $? -eq 0 ]; then
-	echo "${GREEN}[Done]${NC}"
-else
-	echo "${RED}[Failed]${NC}"
-	echo "${RED}ABORT${NC}"
-	exit
-fi
-
-#Create symbolic link
-echo -n "[*] Creating links ... "
-ln -s ~/.crazyScripts/updateScript/update /bin/update >> /dev/null
-if [ $? -eq 0 ]; then
-	echo "${GREEN}[Done]${NC}"
-else
-	echo "${RED}[Failed]${NC}"
-	echo "${RED}ABORT${NC}"
-	exit
-fi
-
-#Detect os
-echo -n "[*] Detecting OS ... "
-OS=`uname -n`
-if [ "$OS" != "ubuntu" ]; then
-	echo "[Other]"
-	echo "Please enter neccessary update commands one by one and press CTRL+D at the end..."
-	cat > ~/.crazyScripts/updateScript/list.sn
-
-else
-	echo "[Ubuntu]"
-
-	#Configure commands
-	echo -n "[*] Configuring commands ... "
-	echo "apt-get autoclean" >> ~/.crazyScripts/updateScript/list.sn
-	echo "apt-get update" >> ~/.crazyScripts/updateScript/list.sn
-	echo "apt-get upgrade -y" >> ~/.crazyScripts/updateScript/list.sn
-	echo "apt-get dist-upgrade -y" >> ~/.crazyScripts/updateScript/list.sn
-	echo "apt-get autoremove" >> ~/.crazyScripts/updateScript/list.sn
-
-	if [ $? -eq 0 ]; then
-		echo "${GREEN}[Done]${NC}"
-	else
-		echo "${RED}[Failed]${NC}"
-		echo "${RED}ABORT${NC}"
-		exit
-	fi
-fi
-
 echo "Completed"
-echo "${CYAN}Run command update to update the system${NC}" 

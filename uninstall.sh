@@ -47,7 +47,7 @@ fi
 
 #Remove binary file
 echo -n "[*] Removing binary file ... "
-rm /bin/update >> /dev/null
+rm /bin/update > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
 	echo "${GREEN}[Done]${NC}"
@@ -59,7 +59,7 @@ fi
 
 #remove updateScript directory
 echo -n "[*] Removing updateScript directory ... "
-rm -r ~/.crazyScripts/updateScript >> /dev/null
+rm -r ~/.crazyScripts/updateScript > /dev/null 2>&1
 if [ $? -eq 0 ]; then
 	echo "${GREEN}[Done]${NC}"
 else

@@ -50,7 +50,7 @@ echo "${CYAN}Checking for dependencies ... ${NC}"
 
 #Check for gcc
 echo -n "[*] Checking for gcc ... "
-which gcc >> /dev/null
+which gcc > /dev/null 2>&1
 if [ $? -eq 0 ]; then
 	echo "${GREEN}[Present]${NC}"
 else
@@ -65,7 +65,7 @@ echo "${CYAN}Installing ... ${NC}"
 
 #Compile source file
 echo -n "[*] Compiling source ... "
-cc src/update.c -o src/update
+cc src/update.c -o src/update 
 if [ $? -eq 0 ]; then
 	echo "${GREEN}[Done]${NC}"
 else
@@ -76,7 +76,7 @@ fi
 
 #Create directory
 echo -n "[*] Creating file structure ... "
-mkdir -p ~/.crazyScripts/updateScript >> /dev/null
+mkdir -p ~/.crazyScripts/updateScript > /dev/null 2>&1
 if [ $? -eq 0 ]; then
 	echo "${GREEN}[Done]${NC}"
 else
@@ -87,7 +87,7 @@ fi
 
 #Copy compiled file
 echo -n "[*] Moving binary file ... "
-mv src/update ~/.crazyScripts/updateScript >> /dev/null
+mv src/update ~/.crazyScripts/updateScript > /dev/null 2>&1
 if [ $? -eq 0 ]; then
 	echo "${GREEN}[Done]${NC}"
 else
@@ -98,7 +98,7 @@ fi
 
 #Create symbolic link
 echo -n "[*] Creating links ... "
-ln -s ~/.crazyScripts/updateScript/update /bin/update >> /dev/null
+ln -s ~/.crazyScripts/updateScript/update /bin/update > /dev/null 2>&1
 if [ $? -eq 0 ]; then
 	echo "${GREEN}[Done]${NC}"
 else
